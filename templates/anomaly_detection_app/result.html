@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Anomaly Detection Results</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        h2 {
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .anomaly {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Anomaly Detection Results</h1>
+    <p>Num Points: {{ num_points }}</p>
+    <p>Contamination: {{ contamination }}</p>
+
+    <h2>Data Stream</h2>
+    <ul>
+        {% for value in data_stream %}
+        <li>{{ value }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Anomalies</h2>
+    <ul>
+        {% for index, anomaly in anomalies_with_index %}
+        <p>Anomaly at index {{ index }}: {{ anomaly }}</p>
+        {% endfor %}
+    </ul>
+
+    <h2>Graph of Anomalies</h2>
+    <div id="anomaly-graph"></div>
+
+    <script>
+        console.log("Hello World!");
+        // Extract anomalies data
+        var anomaliesData = {{ anomalies_with_index|json }};
+
+        // Extract x-axis values (indices)
+        var indices = anomaliesData.map(function(anomaly) {
+            return anomaly[0];
+        });
+
+        // Extract y-axis values (anomalies)
+        var anomalies = anomaliesData.map(function(anomaly) {
+            return anomaly[1];
+        });
+
+        // Plot the graph of anomalies
+        var data = [{
+            x: indices,
+            y: anomalies,
+            mode: 'markers',
+            type: 'scatter',
+            marker: {
+                color: 'red',
+                size: 10
+            }
+        }];
+
+        var layout = {
+            title: 'Anomaly Detection Results',
+            yaxis: {
+                title: 'Value'
+            },
+            xaxis: {
+                title: 'Index'
+            }
+        };
+
+        // Add console log to check if the data is correctly added to the DOM
+        console.log("Data for Plotly:", data);
+
+        Plotly.newPlot('anomaly-graph', data, layout);
+    </script>
+</body>
+
+</html>

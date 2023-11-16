@@ -1,0 +1,228 @@
+<!-- anomaly_detection_app/templates/anomaly_detection_app/home.html -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Page title -->
+    <title>Anomaly Detection</title>
+
+    <!-- Plotly library for graph plotting -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Styles for the page layout -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Page heading -->
+    <h1>Anomaly Detection</h1>
+
+    <!-- Form for anomaly detection input -->
+    <form id="anomaly-form">
+
+        {% csrf_token %}
+        <label for="num_points">Num Points:</label>
+        <input type="text" name="num_points" required>
+
+        <label for="contamination">Contamination:</label>
+        <input type="text" name="contamination" id="contamination" required>
+
+        <label for="seasonal_strength">Seasonal Strength:</label>
+        <input type="text" name="seasonal_strength" id="seasonal_strength" required>
+
+        <label for="random_strength">Random Strength:</label>
+        <input type="text" name="random_strength" id="random_strength" required>
+
+        <button type="submit">Detect Anomalies</button>
+    </form>
+
+    <!-- Graph of anomalies -->
+    <h2>Graph of Anomalies</h2>
+    <div id="anomaly-graph"></div>
+
+    <!-- Displayed data stream with "Read More" button -->
+    <h2>Data Stream</h2>
+    <ul id="data-stream-list"></ul>
+    <button id="read-more-data" class="hidden">Read More</button>
+
+    <!-- Displayed anomalies with "Read More" button -->
+    <h2>Anomalies</h2>
+    <ul id="anomalies-list"></ul>
+    <button id="read-more-anomalies" class="hidden">Read More</button>
+
+    <!-- JavaScript code for form submission and UI updates -->
+    <script>
+        document.getElementById('anomaly-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Validate contamination input
+            var contaminationInput = document.getElementById('contamination');
+            var contaminationValue = parseFloat(contaminationInput.value);
+            if (isNaN(contaminationValue) || contaminationValue <= 0 || contaminationValue > 0.5) {
+                alert('Contamination must be a valid number between 0 and 0.5.');
+                return;
+            }
+            var seasonalStrengthInput = document.getElementById('seasonal_strength');
+            var seasonalStrengthValue = parseFloat(seasonalStrengthInput.value);
+            if (isNaN(seasonalStrengthValue) || seasonalStrengthValue <= 0 || seasonalStrengthValue >= 1) {
+                alert('Seasonal Strength must be a valid number between 0 and 1.');
+                return;
+            }
+            var randomStrengthInput = document.getElementById('random_strength');
+            var randomStrengthValue = parseFloat(randomStrengthInput.value);
+            if (isNaN(randomStrengthValue) || randomStrengthValue <= 0 || randomStrengthValue >= 1) {
+                alert('Random Strength must be a valid number between 0 and 1.');
+                return;
+            }
+
+            var formData = new FormData(this);
+
+            // Fetch data from the server
+            fetch('/', {
+                method: 'POST',
+                body: new FormData(document.getElementById('anomaly-form')),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+
+                    // Update the DOM with the results
+                    var visibleDataPoints = 100000;
+                    var dataStreamSlice = data.data_stream.slice(0, visibleDataPoints);
+                    var anomaliesSlice = data.anomalies_with_index.slice(0, visibleDataPoints);
+
+                    document.getElementById('data-stream-list').innerHTML = dataStreamSlice.map(value => `<li>${value}</li>`).join('');
+                    document.getElementById('anomalies-list').innerHTML = anomaliesSlice.map(([index, anomaly]) => `<li>Anomaly at index ${index}: ${anomaly}</li>`).join('');
+
+                    // Show "Read More" buttons if there are more entries
+                    if (data.data_stream.length > visibleDataPoints) {
+                        document.getElementById('read-more-data').classList.remove('hidden');
+                    }
+                    if (data.anomalies_with_index.length > visibleDataPoints) {
+                        document.getElementById('read-more-anomalies').classList.remove('hidden');
+                    }
+
+                    // Plot the graph of anomalies
+                    var indices = data.anomalies_with_index.map(([index, anomaly]) => index);
+                    var anomalies = data.anomalies_with_index.map(([index, anomaly]) => anomaly);
+                    var data_stream = data.data_stream.map(value => value);
+
+                    var data = [
+                        {
+                            x: indices,
+                            y: anomalies,
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: {
+                                color: 'red',
+                                size: 10
+                            }
+                        },
+                        {
+                            x: indices,
+                            y: data_stream,
+                            mode: 'lines',
+                            type: 'scatter',
+                            line: {
+                                color: 'blue',
+                                size: 10
+                            }
+                        }
+                    ];
+
+                    var layout = {
+                        title: 'Anomaly Detection Results',
+                        yaxis: {
+                            title: 'Value',
+                            range: [Math.min(...data_stream, ...anomalies), Math.max(...data_stream, ...anomalies)]
+                        },
+                        xaxis: {
+                            title: 'Index'
+                        }
+                    };
+
+                    // Create a new Plotly plot
+                    Plotly.newPlot('anomaly-graph', data, layout);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        // Function to show more entries on "Read More" button click
+        function showMoreEntries(type) {
+            var visibleDataPoints = document.getElementById(type === 'data' ? 'data-stream-list' : 'anomalies-list').getElementsByTagName('li').length;
+            var data = type === 'data' ? window.DATA_STREAM : window.ANOMALIES;
+
+            // Ensure data is defined before attempting to slice
+            if (data) {
+                var dataSlice = data.slice(visibleDataPoints, visibleDataPoints + 10);
+
+                // Append new data points to the list
+                document.getElementById(type === 'data' ? 'data-stream-list' : 'anomalies-list').innerHTML += dataSlice.map(value => `<li>${value}</li>`).join('');
+
+                // Update the number of visible data points
+                visibleDataPoints += dataSlice.length;
+
+                // Hide "Read More" button if no more entries
+                if (visibleDataPoints >= data.length) {
+                    document.getElementById(type === 'data' ? 'read-more-data' : 'read-more-anomalies').classList.add('hidden');
+                }
+            }
+        }
+
+        // Event listeners for "Read More" buttons
+        document.getElementById('read-more-data').addEventListener('click', function () {
+            showMoreEntries('data');
+        });
+
+        document.getElementById('read-more-anomalies').addEventListener('click', function () {
+            showMoreEntries('anomalies');
+        });
+    </script>
+</body>
+
+</html>

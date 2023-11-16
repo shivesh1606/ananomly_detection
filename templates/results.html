@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anomaly Detection Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .anomaly {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Anomaly Detection Results</h2>
+    <p>Anomalies are marked in red:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Value</th>
+                <th>Anomaly Label</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for time, value, anomaly_label in anomalies %}
+            <tr>
+                <td>{{ time }}</td>
+                <td>{{ value }}</td>
+                <td class="{% if anomaly_label == -1 %}anomaly{% endif %}">{{ anomaly_label }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
