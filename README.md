@@ -28,23 +28,23 @@ Ensure you have the following installed on your machine:
 
 1. Clone the repository:
 
-   ```bash
-   git clone https://github.com/your-username/anomaly-detection-project.git ```
+
+   git clone https://github.com/your-username/anomaly-detection-project.git 
 1. Navigate to the project directory:
 
    ```bash
-cd anomaly-detection-project ```
+cd anomaly-detection-project
 
 2. Install dependencies:
 
   ```bash
-pip install -r requirements.txt ```
+pip install -r requirements.txt 
 
 ## Usage
 Run the Django development server:
 
   ```bash
-python manage.py runserver ```
+python manage.py runserver 
 
 Open your web browser and go to http://localhost:8000/ to access the anomaly detection interface.
 
