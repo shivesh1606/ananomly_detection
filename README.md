@@ -36,12 +36,12 @@ Run the Django development server:
 Open your web browser and go to http://localhost:8000/ to access the anomaly detection interface.
 
 ## Input Parameters
-**Num Points**: Number of data points in the synthetic data stream.
-**Contamination**: Proportion of anomalies in the data stream.
-**Seasonal Strength**: Strength of the seasonal component in the data generation.
-**Random Strength**: Strength of the random noise component in the data generation.
-**Download Data Stream Button** : Button to download the datastream generated in backend
-**Results**
+Num Points: Number of data points in the synthetic data stream.
+Contamination: Proportion of anomalies in the data stream.
+Seasonal Strength: Strength of the seasonal component in the data generation.
+Random Strength: Strength of the random noise component in the data generation.
+Download Data Stream Button: Button to download the datastream generated in backend
+Results
 The system will display the data stream, detected anomalies, and a graph illustrating the anomalies over the data stream.
 
 ## Technologies Used
