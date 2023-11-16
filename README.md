@@ -20,23 +20,19 @@ This project implements an anomaly detection system using Isolation Forest, a ma
 
 Ensure you have the following installed on your machine:
 
-- Python (version X.X)
-- Django (version X.X)
-- Other dependencies (list them here)
-
+- Python (version  3.9.7)
 ## Installation
 
 1. Clone the repository:
-```
-   git clone https://github.com/your-username/anomaly-detection-project.git ```
+``` git clone https://github.com/your-username/anomaly-detection-project.git ```
 1. Navigate to the project directory:
-cd anomaly-detection-project
+```cd anomaly-detection-project```
 2. Install dependencies:
-pip install -r requirements.txt 
+```pip install -r requirements.txt```
 
 ## Usage
 Run the Django development server:
-python manage.py runserver 
+```python manage.py runserver ```
 
 Open your web browser and go to http://localhost:8000/ to access the anomaly detection interface.
 
