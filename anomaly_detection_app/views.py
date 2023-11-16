@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 import numpy as np
 from sklearn.ensemble import IsolationForest
 
-def detect_anomalies(request):
+def detect_anomalies(request) -> JsonResponse:
     if request.method == 'POST':
         try:
             num_points = int(request.POST.get('num_points'))

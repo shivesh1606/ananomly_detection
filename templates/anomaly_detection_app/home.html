@@ -41,7 +41,7 @@
             box-sizing: border-box;
         }
 
-        button {
+        button,a{
             background-color: #4caf50;
             color: #fff;
             padding: 10px 15px;
@@ -82,6 +82,9 @@
     <!-- Graph of anomalies -->
     <h2>Graph of Anomalies</h2>
     <div id="anomaly-graph"></div>
+    {% comment %} Button to donwnload DataSteam {% endcomment %}
+    <a class="hidden" download="data_stream.txt">Download Data Stream</a>
+
 
     <!-- Displayed data stream with "Read More" button -->
     <h2>Data Stream</h2>
@@ -92,7 +95,7 @@
     <h2>Anomalies</h2>
     <ul id="anomalies-list"></ul>
     <button id="read-more-anomalies" class="hidden">Read More</button>
-
+    
     <!-- JavaScript code for form submission and UI updates -->
     <script>
         document.getElementById('anomaly-form').addEventListener('submit', function (e) {
@@ -133,7 +136,13 @@
                     var visibleDataPoints = 100000;
                     var dataStreamSlice = data.data_stream.slice(0, visibleDataPoints);
                     var anomaliesSlice = data.anomalies_with_index.slice(0, visibleDataPoints);
-
+                    {% comment %} Add CSV file to Download Button {% endcomment %}
+                    var dataStream = data.data_stream.map(value => value);
+                    var blob = new Blob([dataStream], {type: "text/plain;charset=utf-8"});
+                    var downloadLink = document.getElementsByTagName("a")[0];
+                    downloadLink.href = URL.createObjectURL(blob);
+                    downloadLink.classList.remove('hidden');
+                    
                     document.getElementById('data-stream-list').innerHTML = dataStreamSlice.map(value => `<li>${value}</li>`).join('');
                     document.getElementById('anomalies-list').innerHTML = anomaliesSlice.map(([index, anomaly]) => `<li>Anomaly at index ${index}: ${anomaly}</li>`).join('');
 

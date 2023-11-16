@@ -13,8 +13,7 @@ This project implements an anomaly detection system using Isolation Forest, a ma
 - [Results](#results)
 - [Technologies Used](#technologies-used)
 - [Use Case](#use-case)
-- [Contributing](#contributing)
-- [License](#license)
+
 
 ## Prerequisites
 
@@ -37,11 +36,12 @@ Run the Django development server:
 Open your web browser and go to http://localhost:8000/ to access the anomaly detection interface.
 
 ## Input Parameters
-Num Points: Number of data points in the synthetic data stream.
-Contamination: Proportion of anomalies in the data stream.
-Seasonal Strength: Strength of the seasonal component in the data generation.
-Random Strength: Strength of the random noise component in the data generation.
-Results
+**Num Points**: Number of data points in the synthetic data stream.
+**Contamination**: Proportion of anomalies in the data stream.
+**Seasonal Strength**: Strength of the seasonal component in the data generation.
+**Random Strength**: Strength of the random noise component in the data generation.
+**Download Data Stream Button** : Button to download the datastream generated in backend
+**Results**
 The system will display the data stream, detected anomalies, and a graph illustrating the anomalies over the data stream.
 
 ## Technologies Used
@@ -49,7 +49,6 @@ The system will display the data stream, detected anomalies, and a graph illustr
 - Plotly
 - NumPy
 - Scikit-learn
-- Use Case
-## Scenario:
+## Use Case Scenario:
 
 Imagine you have a sensor network collecting data over time, and you want to identify anomalies or irregular patterns in the collected data. This anomaly detection system can be applied to analyze the sensor data, detect unusual patterns, and provide insights into potential issues or abnormalities within the monitored environment.
