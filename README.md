@@ -30,25 +30,25 @@ Ensure you have the following installed on your machine:
 
    ```bash
    git clone https://github.com/your-username/anomaly-detection-project.git ```
-2. Navigate to the project directory:
+1. Navigate to the project directory:
 
    ```bash
-Copy code
 cd anomaly-detection-project ```
-Install dependencies:
 
-bash
-Copy code
-pip install -r requirements.txt
-Usage
+2. Install dependencies:
+
+  ```bash
+pip install -r requirements.txt ```
+
+## Usage
 Run the Django development server:
 
-bash
-Copy code
-python manage.py runserver
+  ```bash
+python manage.py runserver ```
+
 Open your web browser and go to http://localhost:8000/ to access the anomaly detection interface.
 
-Input Parameters
+## Input Parameters
 Num Points: Number of data points in the synthetic data stream.
 Contamination: Proportion of anomalies in the data stream.
 Seasonal Strength: Strength of the seasonal component in the data generation.
@@ -56,12 +56,12 @@ Random Strength: Strength of the random noise component in the data generation.
 Results
 The system will display the data stream, detected anomalies, and a graph illustrating the anomalies over the data stream.
 
-Technologies Used
-Django
-Plotly
-NumPy
-Scikit-learn
-Use Case
-Scenario:
+## Technologies Used
+- Django
+- Plotly
+- NumPy
+- Scikit-learn
+- Use Case
+## Scenario:
 
 Imagine you have a sensor network collecting data over time, and you want to identify anomalies or irregular patterns in the collected data. This anomaly detection system can be applied to analyze the sensor data, detect unusual patterns, and provide insights into potential issues or abnormalities within the monitored environment.
